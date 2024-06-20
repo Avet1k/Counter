@@ -1,22 +1,16 @@
 using System.Collections;
 using UnityEngine;
-using TMPro;
+using UnityEngine.Events;
 
-[RequireComponent(typeof(TMP_Text))]
-public class TextCounter : MonoBehaviour
+public class Counter : MonoBehaviour
 {
     private const int Left = 0;
     
-    private TMP_Text _label;
-    private float _delay = 0.5f;
-    private int _counter;
     private Coroutine _coroutine;
+    private int _value;
+    private float _delay = 0.5f;
 
-    private void Awake()
-    {
-        _label = GetComponent<TMP_Text>();
-        _label.text = _counter.ToString("");
-    }
+    public event UnityAction<int> Changed;
 
     private void Update()
     {
@@ -41,7 +35,9 @@ public class TextCounter : MonoBehaviour
 
         while (isWorking)
         {
-            _label.text = _counter++.ToString("");
+            _value++;
+
+            Changed?.Invoke(_value);
             
             yield return delay;
         }
